@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NutriMap AI - Results</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>🥗 NutriMap AI</h1>
+
+        <p class="subtitle">
+            Your Personalized Recipe Recommendations
+        </p>
+
+
+        <!-- Message -->
+
+        {% if message %}
+
+        <div class="message">
+            {{ message }}
+        </div>
+
+        {% endif %}
+
+
+        <!-- Recommended Recipes -->
+
+        {% if recipes %}
+
+        <h2>🍽️ Recommended Recipes</h2>
+
+        <div class="recipe-grid">
+
+            {% for recipe in recipes %}
+
+            <div class="recipe-card">
+
+                {% if recipe.image %}
+
+                <img src="{{ recipe.image }}" alt="{{ recipe.name }}">
+
+                {% endif %}
+
+
+                <h2>
+                    {{ recipe.name }}
+                </h2>
+
+
+                <div class="nutrition">
+
+                    <p>
+                        🔥 Calories:
+                        {{ recipe.calories }}
+                    </p>
+
+                    <p>
+                        💪 Protein:
+                        {{ recipe.protein }}
+                    </p>
+
+                    <p>
+                        🥑 Fat:
+                        {{ recipe.fat }}
+                    </p>
+
+                    <p>
+                        🍚 Carbohydrates:
+                        {{ recipe.carbohydrates }}
+                    </p>
+
+                    <p>
+                        🌿 Fiber:
+                        {{ recipe.fiber }}
+                    </p>
+
+                </div>
+
+
+                <div class="ingredients">
+
+                    <h3>🥕 Ingredients</h3>
+
+                    <p>
+                        {{ recipe.ingredients }}
+                    </p>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="message">
+
+            <p>
+                No recipes found.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- Navigation Buttons -->
+
+        <div class="back-section">
+
+            <!-- NEW: 7-Day Meal Plan -->
+
+            <a href="/timetable" class="back-button">
+                📅 View My 7-Day Meal Plan
+            </a>
+
+
+            <!-- Back to Home -->
+
+            <a href="/" class="back-button">
+                ← Back to Home
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

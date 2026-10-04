@@ -1,0 +1,605 @@
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 40px 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg, #eaf7f1, #f4faf7);
+    color: #17352b;
+}
+
+
+/* =========================================================
+   MAIN CONTAINER
+========================================================= */
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 28px;
+    padding: 45px 70px 55px;
+    box-shadow: 0 10px 35px rgba(28, 75, 58, 0.10);
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+h1 {
+    text-align: center;
+    margin: 0;
+    color: #278653;
+    font-size: 48px;
+    font-weight: 700;
+}
+
+.subtitle {
+    text-align: center;
+    margin: 8px 0 35px;
+    color: #667c74;
+    font-size: 21px;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+form {
+    width: 100%;
+}
+
+
+/* Two-column layout */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px 30px;
+}
+
+
+/* Each field */
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Full-width fields */
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+
+/* =========================================================
+   LABELS
+========================================================= */
+
+label {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #24463a;
+}
+
+
+/* =========================================================
+   INPUTS / SELECT / TEXTAREA
+========================================================= */
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1.5px solid #cbded5;
+    border-radius: 12px;
+    background: #fbfdfc;
+    color: #17352b;
+    font-size: 16px;
+    font-family: inherit;
+    outline: none;
+    transition: 0.2s ease;
+}
+
+input,
+select {
+    height: 50px;
+}
+
+textarea {
+    min-height: 115px;
+    resize: vertical;
+}
+
+
+/* Focus */
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #2d9360;
+    box-shadow: 0 0 0 3px rgba(45, 147, 96, 0.10);
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+button,
+input[type="submit"] {
+    width: 100%;
+    margin-top: 28px;
+    padding: 16px 20px;
+    border: none;
+    border-radius: 13px;
+    background: #2d9360;
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+button:hover,
+input[type="submit"]:hover {
+    background: #247b50;
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   LOGO / HEADER IMAGE
+========================================================= */
+
+.logo {
+    display: block;
+    width: 65px;
+    height: 65px;
+    object-fit: contain;
+    margin: 0 auto 8px;
+}
+
+
+/* =========================================================
+   RECIPE CARDS
+========================================================= */
+
+.recipe-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 30px;
+}
+
+.recipe-card {
+    background: #ffffff;
+    border: 1px solid #dcebe4;
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 0 6px 18px rgba(31, 77, 58, 0.08);
+    transition: 0.2s ease;
+}
+
+.recipe-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(31, 77, 58, 0.12);
+}
+
+.recipe-card h2,
+.recipe-card h3 {
+    color: #278653;
+}
+
+
+/* =========================================================
+   MESSAGE BOX
+========================================================= */
+
+.message {
+    margin: 30px auto;
+    padding: 25px;
+    max-width: 900px;
+    text-align: center;
+    border: 1px solid #cfe4d9;
+    border-radius: 18px;
+    background: #f4faf7;
+    color: #315b4a;
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   LINKS
+========================================================= */
+
+a {
+    color: #278653;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+/* Laptop / tablet */
+
+@media (max-width: 900px) {
+
+    .container {
+        padding: 35px 35px 45px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full-width {
+        grid-column: auto;
+    }
+
+    .recipe-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    h1 {
+        font-size: 40px;
+    }
+}
+
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 15px;
+    }
+
+    .container {
+        padding: 25px 20px 35px;
+        border-radius: 20px;
+    }
+
+    h1 {
+        font-size: 32px;
+    }
+
+    .subtitle {
+        font-size: 17px;
+    }
+
+    .recipe-grid {
+        grid-template-columns: 1fr;
+    }
+
+    input,
+    select,
+    textarea {
+        font-size: 15px;
+    }
+}
+
+/* =====================================================
+   INDEX PAGE ONLY
+   ===================================================== */
+
+.index-page {
+    margin: 0;
+    padding: 0;
+
+    min-height: 100vh;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    background:
+        linear-gradient(135deg,
+            #edf8f2,
+            #f8fbf9);
+
+    color: #183b2b;
+}
+
+
+/* MAIN CONTAINER */
+
+.index-page .index-container {
+
+    width: 92%;
+    max-width: 1250px;
+
+    margin: 35px auto;
+
+    padding: 45px 55px;
+
+    background: #ffffff;
+
+    border-radius: 28px;
+
+    box-shadow:
+        0 12px 35px rgba(31, 84, 58, 0.10);
+
+    box-sizing: border-box;
+}
+
+
+/* =====================================================
+   HEADER
+   ===================================================== */
+
+.index-page .index-header {
+
+    text-align: center;
+
+    margin-bottom: 35px;
+}
+
+
+.index-page .brand {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 18px;
+}
+
+
+.index-page .brand-icon {
+
+    font-size: 48px;
+
+    width: 65px;
+    height: 65px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #edf7f1;
+
+    border-radius: 18px;
+}
+
+
+.index-page .brand h1 {
+
+    margin: 0;
+
+    font-size: 52px;
+
+    font-weight: 700;
+
+    color: #2d8b57;
+
+    letter-spacing: -1px;
+}
+
+
+.index-page .brand p {
+
+    margin: 8px 0 0;
+
+    font-size: 20px;
+
+    color: #687d72;
+}
+
+
+/* =====================================================
+   TWO COLUMN FORM
+   ===================================================== */
+
+.index-page .form-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 28px 30px;
+}
+
+
+.index-page .form-column {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 25px;
+}
+
+
+/* =====================================================
+   FORM GROUP
+   ===================================================== */
+
+.index-page .form-group {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 9px;
+}
+
+
+.index-page .form-group label {
+
+    font-size: 19px;
+
+    font-weight: 600;
+
+    color: #203f31;
+}
+
+
+/* =====================================================
+   INPUTS
+   ===================================================== */
+
+.index-page .form-group input,
+.index-page .form-group select,
+.index-page .form-group textarea {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 15px 18px;
+
+    border: 2px solid #d9e0dc;
+
+    border-radius: 14px;
+
+    background: #ffffff;
+
+    color: #17251e;
+
+    font-size: 17px;
+
+    font-family: inherit;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+
+.index-page .form-group input:focus,
+.index-page .form-group select:focus,
+.index-page .form-group textarea:focus {
+
+    border-color: #3b9663;
+
+    background: #fbfefc;
+
+    box-shadow:
+        0 0 0 3px rgba(59, 150, 99, 0.10);
+}
+
+
+/* TEXTAREA */
+
+.index-page .form-group textarea {
+
+    min-height: 54px;
+
+    resize: vertical;
+}
+
+
+/* =====================================================
+   SUBMIT BUTTON
+   ===================================================== */
+
+.index-page .form-button {
+
+    display: flex;
+
+    justify-content: center;
+
+    margin-top: 35px;
+}
+
+
+.index-page .form-button button {
+
+    border: none;
+
+    padding: 15px 32px;
+
+    border-radius: 12px;
+
+    background: #2d8b57;
+
+    color: white;
+
+    font-size: 17px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.index-page .form-button button:hover {
+
+    background: #247449;
+
+    transform: translateY(-1px);
+}
+
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 800px) {
+
+    .index-page .index-container {
+
+        width: 94%;
+
+        padding: 30px 25px;
+
+        margin: 20px auto;
+    }
+
+
+    .index-page .form-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .index-page .brand {
+
+        flex-direction: column;
+
+        gap: 8px;
+    }
+
+
+    .index-page .brand h1 {
+
+        font-size: 40px;
+    }
+
+
+    .index-page .brand p {
+
+        font-size: 16px;
+    }
+}
