@@ -1,45 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request
 import pickle
 import re
-import sqlite3
-
-from werkzeug.security import generate_password_hash, check_password_hash
 from sklearn.metrics.pairwise import cosine_similarity
 
 app = Flask(__name__)
 
-app.secret_key = "nutrimap_ai_secret_key_2026"
-# =========================================================
-# USER DATABASE
-# =========================================================
 
-DATABASE = "nutrimap.db"
-
-
-def get_db_connection():
-    connection = sqlite3.connect(DATABASE)
-    connection.row_factory = sqlite3.Row
-    return connection
-
-
-def create_user_table():
-
-    connection = get_db_connection()
-
-    connection.execute("""
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            full_name TEXT NOT NULL,
-            email TEXT UNIQUE NOT NULL,
-            password TEXT NOT NULL
-        )
-    """)
-
-    connection.commit()
-    connection.close()
-
-
-create_user_table()
 # =========================================================
 # LOAD ML MODEL
 # =========================================================
@@ -925,184 +891,7 @@ def allergy_allowed(recipe, allergy):
 # =========================================================
 # HOME PAGE
 # =========================================================
-# =========================================================
-# REGISTER
-# =========================================================
 
-@app.route("/register", methods=["GET", "POST"])
-def register():
-
-    if request.method == "POST":
-
-        full_name = request.form.get(
-            "full_name",
-            ""
-        ).strip()
-
-        email = request.form.get(
-            "email",
-            ""
-        ).strip().lower()
-
-        password = request.form.get(
-            "password",
-            ""
-        )
-
-        confirm_password = request.form.get(
-            "confirm_password",
-            ""
-        )
-
-
-        if not full_name or not email or not password:
-
-            return render_template(
-                "register.html",
-                message="Please fill all the fields."
-            )
-
-
-        if password != confirm_password:
-
-            return render_template(
-                "register.html",
-                message="Passwords do not match."
-            )
-
-
-        if len(password) < 6:
-
-            return render_template(
-                "register.html",
-                message="Password must contain at least 6 characters."
-            )
-
-
-        connection = get_db_connection()
-
-
-        existing_user = connection.execute(
-            "SELECT id FROM users WHERE email = ?",
-            (email,)
-        ).fetchone()
-
-
-        if existing_user:
-
-            connection.close()
-
-            return render_template(
-                "register.html",
-                message="An account with this email already exists."
-            )
-
-
-        hashed_password = generate_password_hash(
-            password
-        )
-
-
-        connection.execute(
-            """
-            INSERT INTO users
-            (full_name, email, password)
-            VALUES (?, ?, ?)
-            """,
-            (
-                full_name,
-                email,
-                hashed_password
-            )
-        )
-
-
-        connection.commit()
-        connection.close()
-
-
-        return redirect(
-            url_for("login")
-        )
-
-
-    return render_template(
-        "register.html",
-        message=""
-    )
-# =========================================================
-# LOGIN
-# =========================================================
-
-@app.route("/login", methods=["GET", "POST"])
-def login():
-
-    if request.method == "POST":
-
-        email = request.form.get(
-            "email",
-            ""
-        ).strip().lower()
-
-        password = request.form.get(
-            "password",
-            ""
-        )
-
-
-        connection = get_db_connection()
-
-
-        user = connection.execute(
-            """
-            SELECT *
-            FROM users
-            WHERE email = ?
-            """,
-            (email,)
-        ).fetchone()
-
-
-        connection.close()
-
-
-        if user and check_password_hash(
-            user["password"],
-            password
-        ):
-
-            session["user_id"] = user["id"]
-            session["user_name"] = user["full_name"]
-            session["user_email"] = user["email"]
-
-
-            return redirect(
-                url_for("home")
-            )
-
-
-        return render_template(
-            "login.html",
-            message="Invalid email or password."
-        )
-
-
-    return render_template(
-        "login.html",
-        message=""
-    )
-# =========================================================
-# LOGOUT
-# =========================================================
-
-@app.route("/logout")
-def logout():
-
-    session.clear()
-
-    return redirect(
-        url_for("login")
-    )
 @app.route("/")
 def home():
 
@@ -1120,7 +909,6 @@ def home():
     methods=["POST"]
 )
 def recommend():
-    
 
     # -----------------------------------------------------
     # USER INPUT
