@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NutriMap AI</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="nm-page">
+<div class="nm-shell">
+  <nav class="nm-nav">
+    <a class="nm-brand" href="/"><span class="brand-mark">🥗</span><span>NutriMap <b>AI</b></span></a>
+    <div class="nav-pill">AI-powered nutrition planning</div>
+  </nav>
+
+  <main>
+    <section class="hero-card">
+      <div class="hero-copy">
+        <span class="eyebrow">PERSONALIZED • HEALTH-AWARE • SIMPLE</span>
+        <h1>Eat smarter.<br><span>Live healthier.</span></h1>
+        <p>Tell NutriMap what you have, what you need, and what you're working toward. Get recipe recommendations designed around your profile.</p>
+        <div class="hero-points"><span>✓ Ingredient-aware</span><span>✓ Goal-focused</span><span>✓ Allergy-aware</span></div>
+      </div>
+      <div class="hero-visual">
+        <div class="orb orb-one"></div><div class="orb orb-two"></div>
+        <div class="food-card"><div class="food-emoji">🥑</div><div><b>Smart Match</b><small>Recipes built around you</small></div><span class="check">✓</span></div>
+        <div class="mini-card"><span>💪</span><div><b>Protein</b><small>Personalized targets</small></div></div>
+      </div>
+    </section>
+
+    <section class="section-heading">
+      <div><span class="eyebrow">YOUR PROFILE</span><h2>Build your nutrition profile</h2><p>A few details help NutriMap make better recommendations.</p></div>
+      <div class="step-badge">STEP 1 <span>OF 1</span></div>
+    </section>
+
+    <form action="/recommend" method="POST" class="profile-card">
+      <div class="form-section"><div class="section-icon">👤</div><div><h3>About you</h3><p>Basic information for personalization</p></div></div>
+      <div class="form-grid">
+        <div class="field"><label>Full Name</label><input type="text" name="name" placeholder="Your name"></div>
+        <div class="field"><label>Age</label><input type="number" name="age" placeholder="e.g. 21"></div>
+        <div class="field"><label>Gender</label><select name="gender"><option value="">Select gender</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+        <div class="field"><label>Weight <small>(kg)</small></label><input type="number" name="weight" placeholder="e.g. 65"></div>
+        <div class="field"><label>Height <small>(cm)</small></label><input type="number" name="height" placeholder="e.g. 170"></div>
+        <div class="field"><label>Diet preference</label><select name="diet"><option>Vegetarian</option><option>Non Vegetarian</option><option>Vegan</option></select></div>
+      </div>
+
+      <div class="form-divider"></div>
+      <div class="form-section"><div class="section-icon">❤️</div><div><h3>Health goals</h3><p>Help the system understand what matters to you</p></div></div>
+      <div class="form-grid">
+        <div class="field"><label>Health condition</label><select name="condition"><option>None</option><option>Diabetes</option><option>Hypertension</option><option>Obesity</option><option>Heart Disease</option><option>Thyroid</option></select></div>
+        <div class="field"><label>Health goal</label><select name="goal"><option>Weight Loss</option><option>Weight Gain</option><option>Maintain Weight</option></select></div>
+        <div class="field full"><label>Food allergy <small>(optional)</small></label><input type="text" name="allergy" placeholder="e.g. Peanut, Milk"></div>
+        <div class="field full"><label>Available ingredients</label><textarea name="ingredients" placeholder="e.g. Rice, Tomato, Onion, Carrot" required></textarea><small class="field-help">Separate ingredients with commas. NutriMap will match recipes using what you already have.</small></div>
+      </div>
+
+      <button class="primary-cta" type="submit"><span>Generate My Recommendations</span><b>→</b></button>
+    </form>
+  </main>
+  <footer>NutriMap AI <span>•</span> Personalized nutrition recommendations</footer>
+</div>
+</body>
+</html>

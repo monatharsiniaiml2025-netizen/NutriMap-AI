@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NutriMap AI - Recommendations</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="nm-page">
+<div class="nm-shell result-shell">
+<nav class="nm-nav"><a class="nm-brand" href="/"><span class="brand-mark">🥗</span><span>NutriMap <b>AI</b></span></a><a class="nav-link" href="/">← New profile</a></nav>
+
+<section class="result-hero"><div><span class="eyebrow">YOUR NUTRITION MAP</span><h1>Recommendations made <span>for you.</span></h1><p>Explore your best recipe matches, nutrition details and ingredients in one simple dashboard.</p></div><div class="result-stat"><strong>{% if recipes %}{{ recipes|length }}{% else %}0{% endif %}</strong><small>top matches</small></div></section>
+
+{% if message %}<div class="notice">💡 <span>{{ message }}</span></div>{% endif %}
+
+{% if recipes %}
+<div class="result-tabs" role="tablist">
+<button class="tab active" data-tab="matches">🍽️ Top Matches</button>
+<button class="tab" data-tab="nutrition">📊 Nutrition View</button>
+<button class="tab" data-tab="ingredients">🥕 Ingredients</button>
+</div>
+
+<section id="matches" class="tab-panel active"><div class="recipe-grid">
+{% for recipe in recipes %}
+<article class="recipe-card">
+  <div class="recipe-top"><span class="match-label">MATCH {{ loop.index }}</span><span class="heart">♡</span></div>
+  <div class="recipe-art">{{ ['🥗','🍲','🥘','🍛','🥙'][loop.index0 % 5] }}</div>
+  <h2>{{ recipe.name }}</h2>
+  <p class="recipe-caption">A personalized option selected from your available ingredients.</p>
+  <div class="nutrition-chips"><span>🔥 {{ recipe.calories }} kcal</span><span>💪 {{ recipe.protein }} protein</span><span>🌿 {{ recipe.fiber }} fiber</span></div>
+  <details><summary>View full nutrition & ingredients</summary><div class="detail-box"><div class="macro-grid"><span>🥑 Fat <b>{{ recipe.fat }}</b></span><span>🍚 Carbs <b>{{ recipe.carbohydrates }}</b></span><span>🌿 Fiber <b>{{ recipe.fiber }}</b></span></div><h4>Ingredients</h4><p>{{ recipe.ingredients }}</p></div></details>
+</article>
+{% endfor %}
+</div></section>
+
+<section id="nutrition" class="tab-panel"><div class="nutrition-board">
+<div class="board-heading"><span class="eyebrow">COMPARE</span><h2>Nutrition at a glance</h2><p>Compare your recommended recipes without opening each card.</p></div>
+<div class="nutrition-table"><div class="table-row table-head"><span>Recipe</span><span>Calories</span><span>Protein</span><span>Fat</span><span>Carbs</span><span>Fiber</span></div>{% for recipe in recipes %}<div class="table-row"><strong>{{ recipe.name }}</strong><span>{{ recipe.calories }}</span><span>{{ recipe.protein }}</span><span>{{ recipe.fat }}</span><span>{{ recipe.carbohydrates }}</span><span>{{ recipe.fiber }}</span></div>{% endfor %}</div></div></section>
+
+<section id="ingredients" class="tab-panel"><div class="ingredient-board"><div class="board-heading"><span class="eyebrow">WHAT YOU CAN COOK</span><h2>Recipe ingredients</h2><p>See the ingredients used by each recommendation.</p></div><div class="ingredient-grid">{% for recipe in recipes %}<div class="ingredient-card"><span class="ingredient-number">0{{ loop.index }}</span><h3>{{ recipe.name }}</h3><p>{{ recipe.ingredients }}</p></div>{% endfor %}</div></div></section>
+
+<div class="action-row"><a class="secondary-cta" href="/">← Create another profile</a><a class="primary-link" href="/timetable">View 7-Day Meal Plan →</a></div>
+{% else %}<div class="empty-state"><div>🥣</div><h2>No recipes found</h2><p>{{ message or 'Try adding a few more available ingredients.' }}</p><a class="primary-link" href="/">Update ingredients →</a></div>{% endif %}
+<footer>NutriMap AI <span>•</span> Personalized nutrition recommendations</footer>
+</div>
+<script>
+document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(x=>x.classList.remove('active'));btn.classList.add('active');document.getElementById(btn.dataset.tab).classList.add('active');}));
+</script>
+</body></html>

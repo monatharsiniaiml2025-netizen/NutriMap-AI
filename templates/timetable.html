@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NutriMap AI - Weekly Meal Plan</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4faf7;
+            color: #123c35;
+        }
+
+        .meal-container {
+            width: 94%;
+            max-width: 1400px;
+            margin: 35px auto;
+        }
+
+        /* ---------------------------------------
+           HEADER
+        --------------------------------------- */
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: 42px;
+            color: #278c5b;
+            font-weight: 700;
+        }
+
+        .page-header p {
+            margin-top: 10px;
+            font-size: 20px;
+            color: #647b76;
+        }
+
+
+        /* ---------------------------------------
+           NOTIFICATION SECTION
+        --------------------------------------- */
+
+        .notification-section {
+            background: white;
+            border: 1px solid #d7e9e1;
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 8px 22px rgba(25, 90, 65, 0.07);
+        }
+
+        .notification-button {
+            width: 100%;
+            max-width: 500px;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 12px;
+            background: #2d945e;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .notification-button:hover {
+            background: #247c4e;
+        }
+
+        #notificationStatus {
+            margin: 14px 0 0;
+            color: #496b61;
+            font-size: 16px;
+        }
+
+
+        /* ---------------------------------------
+           WEEKLY GRID
+        --------------------------------------- */
+
+        .weekly-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+
+        /* ---------------------------------------
+           DAY CARD
+        --------------------------------------- */
+
+        .day-card {
+            background: white;
+            border: 1px solid #d8e9e1;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 8px 25px rgba(25, 90, 65, 0.08);
+            transition: transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .day-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(25, 90, 65, 0.13);
+        }
+
+
+        /* ---------------------------------------
+           DAY TITLE
+        --------------------------------------- */
+
+        .day-title {
+            font-size: 27px;
+            font-weight: 700;
+            color: #197c54;
+            margin: 0 0 20px 0;
+            padding-bottom: 13px;
+            border-bottom: 1px solid #e1eee8;
+        }
+
+
+        /* ---------------------------------------
+           MEAL BOX
+        --------------------------------------- */
+
+        .meal-box {
+            background: #f7fbf9;
+            border: 1px solid #e1eee8;
+            border-radius: 14px;
+            padding: 15px;
+            margin-bottom: 14px;
+        }
+
+        .meal-box:last-child {
+            margin-bottom: 0;
+        }
+
+        .meal-name {
+            font-size: 17px;
+            font-weight: 700;
+            color: #174f43;
+            margin-bottom: 8px;
+        }
+
+        .meal-food {
+            font-size: 16px;
+            color: #273f3a;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .meal-time {
+            font-size: 14px;
+            color: #6b827b;
+            font-weight: 500;
+        }
+
+
+        /* ---------------------------------------
+           BOTTOM BUTTONS
+        --------------------------------------- */
+
+        .bottom-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 35px 0;
+        }
+
+        .back-button {
+            display: inline-block;
+            text-decoration: none;
+            padding: 14px 25px;
+            border-radius: 12px;
+            background: #eaf3ef;
+            color: #244f45;
+            font-size: 16px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .back-button:hover {
+            background: #dcece5;
+        }
+
+
+        /* ---------------------------------------
+           RESPONSIVE
+        --------------------------------------- */
+
+        @media (max-width: 1000px) {
+
+            .weekly-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 650px) {
+
+            .meal-container {
+                width: 92%;
+            }
+
+            .weekly-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-header h1 {
+                font-size: 32px;
+            }
+
+            .page-header p {
+                font-size: 17px;
+            }
+
+            .bottom-buttons {
+                flex-direction: column;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="meal-container">
+
+        <!-- HEADER -->
+
+        <div class="page-header">
+
+            <h1>🍽️ Weekly Meal Plan</h1>
+
+            <p>
+                Your 7-Day Personalized Meal Schedule
+            </p>
+
+        </div>
+
+
+        <!-- NOTIFICATION -->
+
+        <div class="notification-section">
+
+            <button id="notificationButton" class="notification-button" onclick="enableNotifications()">
+
+                🔔 Enable Meal Notifications
+
+            </button>
+
+            <p id="notificationStatus">
+                Notifications are currently disabled.
+            </p>
+
+        </div>
+
+
+        <!-- WEEKLY MEAL CARDS -->
+
+        <div class="weekly-grid">
+
+
+            <!-- MONDAY -->
+
+            <div class="day-card">
+
+                <h2 class="day-title">
+                    Monday
+                </h2>
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        🌅 Breakfast
+                    </div>
+
+                    <div class="meal-food">
+                        Oats & Vegetable Bowl
+                    </div>
+
+                    <div class="meal-time">
+                        08:00 AM
+                    </div>
+
+                </div>
+
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        ☀️ Lunch
+                    </div>
+
+                    <div class="meal-food">
+                        Vegetable Rice
+                    </div>
+
+                    <div class="meal-time">
+                        01:00 PM
+                    </div>
+
+                </div>
+
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        🍎 Evening Snack
+                    </div>
+
+                    <div class="meal-food">
+                        Fresh Fruit Bowl
+                    </div>
+
+                    <div class="meal-time">
+                        04:30 PM
+                    </div>
+
+                </div>
+
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        🌙 Dinner
+                    </div>
+
+                    <div class="meal-food">
+                        Vegetable Soup
+                    </div>
+
+                    <div class="meal-time">
+                        08:00 PM
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- TUESDAY -->
+
+            <div class="day-card">
+
+                <h2 class="day-title">
+                    Tuesday
+                </h2>
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        🌅 Breakfast
+                    </div>
+
+                    <div class="meal-food">
+                        Idli & Vegetable Sambar
+                    </div>
+
+                    <div class="meal-time">
+                        08:00 AM
+                    </div>
+
+                </div>
+
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        ☀️ Lunch
+                    </div>
+
+                    <div class="meal-food">
+                        Tomato Rice
+                    </div>
+
+                    <div class="meal-time">
+                        01:00 PM
+                    </div>
+
+                </div>
+
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        🍎 Evening Snack
+                    </div>
+
+                    <div class="meal-food">
+                        Apple
+                    </div>
+
+                    <div class="meal-time">
+                        04:30 PM
+                    </div>
+
+                </div>
+
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        🌙 Dinner
+                    </div>
+
+                    <div class="meal-food">
+                        Chapati & Dal
+                    </div>
+
+                    <div class="meal-time">
+                        08:00 PM
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- WEDNESDAY -->
+
+            <div class="day-card">
+
+                <h2 class="day-title">
+                    Wednesday
+                </h2>
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        🌅 Breakfast
+                    </div>
+
+                    <div class="meal-food">
+                        Vegetable Upma
+                    </div>
+
+                    <div class="meal-time">
+                        08:00 AM
+                    </div>
+
+                </div>
+
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        ☀️ Lunch
+                    </div>
+
+                    <div class="meal-food">
+                        Vegetable Bowl
+                    </div>
+
+                    <div class="meal-time">
+                        01:00 PM
+                    </div>
+
+                </div>
+
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        🍎 Evening Snack
+                    </div>
+
+                    <div class="meal-food">
+                        Fruit Bowl
+                    </div>
+
+                    <div class="meal-time">
+                        04:30 PM
+                    </div>
+
+                </div>
+
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        🌙 Dinner
+                    </div>
+
+                    <div class="meal-food">
+                        Dal Rice
+                    </div>
+
+                    <div class="meal-time">
+                        08:00 PM
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- THURSDAY -->
+
+            <div class="day-card">
+
+                <h2 class="day-title">
+                    Thursday
+                </h2>
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        🌅 Breakfast
+                    </div>
+
+                    <div class="meal-food">
+                        Dosa & Sambar
+                    </div>
+
+                    <div class="meal-time">
+                        08:00 AM
+                    </div>
+
+                </div>
+
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        ☀️ Lunch
+                    </div>
+
+                    <div class="meal-food">
+                        Vegetable Rice
+                    </div>
+
+                    <div class="meal-time">
+                        01:00 PM
+                    </div>
+
+                </div>
+
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        🍎 Evening Snack
+                    </div>
+
+                    <div class="meal-food">
+                        Banana
+                    </div>
+
+                    <div class="meal-time">
+                        04:30 PM
+                    </div>
+
+                </div>
+
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        🌙 Dinner
+                    </div>
+
+                    <div class="meal-food">
+                        Vegetable Soup
+                    </div>
+
+                    <div class="meal-time">
+                        08:00 PM
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- FRIDAY -->
+
+            <div class="day-card">
+
+                <h2 class="day-title">
+                    Friday
+                </h2>
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        🌅 Breakfast
+                    </div>
+
+                    <div class="meal-food">
+                        Oats Bowl
+                    </div>
+
+                    <div class="meal-time">
+                        08:00 AM
+                    </div>
+
+                </div>
+
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        ☀️ Lunch
+                    </div>
+
+                    <div class="meal-food">
+                        Chapati & Vegetables
+                    </div>
+
+                    <div class="meal-time">
+                        01:00 PM
+                    </div>
+
+                </div>
+
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        🍎 Evening Snack
+                    </div>
+
+                    <div class="meal-food">
+                        Fruit Bowl
+                    </div>
+
+                    <div class="meal-time">
+                        04:30 PM
+                    </div>
+
+                </div>
+
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        🌙 Dinner
+                    </div>
+
+                    <div class="meal-food">
+                        Rice & Dal
+                    </div>
+
+                    <div class="meal-time">
+                        08:00 PM
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- SATURDAY -->
+
+            <div class="day-card">
+
+                <h2 class="day-title">
+                    Saturday
+                </h2>
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        🌅 Breakfast
+                    </div>
+
+                    <div class="meal-food">
+                        Idli & Sambar
+                    </div>
+
+                    <div class="meal-time">
+                        08:00 AM
+                    </div>
+
+                </div>
+
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        ☀️ Lunch
+                    </div>
+
+                    <div class="meal-food">
+                        Vegetable Rice
+                    </div>
+
+                    <div class="meal-time">
+                        01:00 PM
+                    </div>
+
+                </div>
+
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        🍎 Evening Snack
+                    </div>
+
+                    <div class="meal-food">
+                        Apple
+                    </div>
+
+                    <div class="meal-time">
+                        04:30 PM
+                    </div>
+
+                </div>
+
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        🌙 Dinner
+                    </div>
+
+                    <div class="meal-food">
+                        Chapati & Vegetable Curry
+                    </div>
+
+                    <div class="meal-time">
+                        08:00 PM
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- SUNDAY -->
+
+            <div class="day-card">
+
+                <h2 class="day-title">
+                    Sunday
+                </h2>
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        🌅 Breakfast
+                    </div>
+
+                    <div class="meal-food">
+                        Vegetable Upma
+                    </div>
+
+                    <div class="meal-time">
+                        08:00 AM
+                    </div>
+
+                </div>
+
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        ☀️ Lunch
+                    </div>
+
+                    <div class="meal-food">
+                        Healthy Rice Bowl
+                    </div>
+
+                    <div class="meal-time">
+                        01:00 PM
+                    </div>
+
+                </div>
+
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        🍎 Evening Snack
+                    </div>
+
+                    <div class="meal-food">
+                        Fresh Fruit
+                    </div>
+
+                    <div class="meal-time">
+                        04:30 PM
+                    </div>
+
+                </div>
+
+
+                <div class="meal-box">
+
+                    <div class="meal-name">
+                        🌙 Dinner
+                    </div>
+
+                    <div class="meal-food">
+                        Vegetable Soup
+                    </div>
+
+                    <div class="meal-time">
+                        08:00 PM
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- BOTTOM -->
+
+        <div class="bottom-buttons">
+
+            <a href="/" class="back-button">
+
+                ← Back to Home
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+
+    <script>
+
+        const meals = [
+
+            {
+                name: "Breakfast",
+                time: "08:00"
+            },
+
+            {
+                name: "Lunch",
+                time: "13:00"
+            },
+
+            {
+                name: "Evening Snack",
+                time: "16:30"
+            },
+
+            {
+                name: "Dinner",
+                time: "20:00"
+            }
+
+        ];
+
+
+        function enableNotifications() {
+
+            if (!("Notification" in window)) {
+
+                document.getElementById(
+                    "notificationStatus"
+                ).innerText =
+                    "❌ Your browser does not support notifications.";
+
+                return;
+            }
+
+
+            Notification.requestPermission()
+                .then(function (permission) {
+
+                    if (permission === "granted") {
+
+                        document.getElementById(
+                            "notificationStatus"
+                        ).innerText =
+                            "✅ Meal notifications are enabled.";
+
+                        document.getElementById(
+                            "notificationButton"
+                        ).innerText =
+                            "🔔 Notifications Enabled";
+
+
+                        new Notification(
+                            "🥗 NutriMap AI",
+                            {
+                                body:
+                                    "Meal notifications are now enabled!"
+                            }
+                        );
+
+                    }
+
+                    else {
+
+                        document.getElementById(
+                            "notificationStatus"
+                        ).innerText =
+                            "❌ Notification permission was denied.";
+
+                    }
+
+                });
+
+        }
+
+
+        function checkMealTime() {
+
+            if (!("Notification" in window)) {
+                return;
+            }
+
+            if (Notification.permission !== "granted") {
+                return;
+            }
+
+
+            const now = new Date();
+
+            const currentHour =
+                String(
+                    now.getHours()
+                ).padStart(2, "0");
+
+            const currentMinute =
+                String(
+                    now.getMinutes()
+                ).padStart(2, "0");
+
+
+            const currentTime =
+                currentHour +
+                ":" +
+                currentMinute;
+
+
+            meals.forEach(function (meal) {
+
+                if (currentTime === meal.time) {
+
+                    new Notification(
+                        "🥗 NutriMap AI",
+                        {
+                            body:
+                                "It's " +
+                                meal.name +
+                                " time! 🍽️\nPlease follow your meal plan."
+                        }
+                    );
+
+                }
+
+            });
+
+        }
+
+
+        setInterval(
+            checkMealTime,
+            30000
+        );
+
+
+        checkMealTime();
+
+
+        if (
+            "Notification" in window &&
+            Notification.permission === "granted"
+        ) {
+
+            document.getElementById(
+                "notificationStatus"
+            ).innerText =
+                "✅ Meal notifications are enabled.";
+
+        }
+
+    </script>
+
+</body>
+
+</html>
