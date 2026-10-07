@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>NutriMap AI - 7 Day Plan</title><link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"></head>
+<body class="nm-page"><div class="meal-container">
+<nav class="nm-nav"><a class="nm-brand" href="/"><span class="brand-mark">🥗</span><span>NutriMap <b>AI</b></span></a><a class="nav-link" href="/">← New profile</a></nav>
+<header class="page-header"><span class="eyebrow">ADDITIONAL FEATURE</span><h1>7-Day Meal Plan</h1><p>{% if profile %}Built from your latest NutriMap recommendations for {{ profile.goal|lower }}.{% else %}Generate recommendations first to build a personalized plan.{% endif %}</p></header>
+<div class="notification-section"><button id="notificationButton" class="notification-button" onclick="enableNotifications()">🔔 Enable Meal Notifications</button><p id="notificationStatus">Notifications stay active while this page is open.</p></div>
+<div class="weekly-grid">{% for day in weekly_plan %}<div class="day-card"><h2 class="day-title">{{ day.day }}</h2>{% for meal in day.meals %}<div class="meal-box"><div class="meal-name">{{ meal.name }}</div><div class="meal-food">{{ meal.food }}</div><div class="meal-time">{{ meal.time }}</div></div>{% endfor %}</div>{% endfor %}</div>
+<div class="bottom-buttons"><a href="/" class="back-button">← Back to Profile</a></div></div>
+<script>
+const meals=[{name:'Breakfast',time:'08:00'},{name:'Lunch',time:'13:00'},{name:'Evening Snack',time:'16:30'},{name:'Dinner',time:'20:00'}];
+function enableNotifications(){if(!('Notification'in window)){document.getElementById('notificationStatus').innerText='❌ Your browser does not support notifications.';return;}Notification.requestPermission().then(p=>{document.getElementById('notificationStatus').innerText=p==='granted'?'✅ Meal notifications are enabled.':'❌ Notification permission was denied.';if(p==='granted'){document.getElementById('notificationButton').innerText='🔔 Notifications Enabled';new Notification('🥗 NutriMap AI',{body:'Meal notifications are now enabled!'});}})}
+function checkMealTime(){if(!('Notification'in window)||Notification.permission!=='granted')return;const d=new Date(),t=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');meals.forEach(m=>{if(t===m.time)new Notification('🥗 NutriMap AI',{body:`It is ${m.name} time! 🍽️`});});} setInterval(checkMealTime,30000); checkMealTime();
+</script></body></html>

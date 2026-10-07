@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NutriMap AI - Nutrition Map</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="nm-page">
+<div class="nm-shell result-shell">
+<nav class="nm-nav"><a class="nm-brand" href="/"><span class="brand-mark">🥗</span><span>NutriMap <b>AI</b></span></a><a class="nav-link" href="/">← New profile</a></nav>
+
+{% if profile %}
+<section class="map-summary">
+  <div><span class="eyebrow">YOUR NUTRITION MAP</span><h1>{{ profile.name }}, here is how your profile shaped the results.</h1><p>{{ profile.health_note }}</p></div>
+  <div class="map-badge">{{ profile.health_label }}</div>
+</section>
+<div class="profile-strip">
+  <div><span>Condition</span><b>{{ profile.condition }}</b></div>
+  <div><span>Goal</span><b>{{ profile.goal }}</b></div>
+  <div><span>Diet</span><b>{{ profile.diet }}</b></div>
+  <div><span>BMI</span><b>{% if profile.bmi %}{{ profile.bmi }}{% else %}—{% endif %}</b><small>{{ profile.bmi_category }}</small></div>
+  <div><span>Allergy</span><b>{{ profile.allergy }}</b></div>
+</div>
+{% endif %}
+
+{% if message %}<div class="notice">💡 <span>{{ message }}</span></div>{% endif %}
+
+{% if recipes %}
+<div class="mapping-card">
+  <div><span class="eyebrow">HOW NUTRIMAP SCORES</span><h2>Health → Nutrition → Recipe</h2><p>Every eligible recipe receives a combined score instead of being selected only by diet type.</p></div>
+  <div class="mapping-flow"><span>Ingredients</span><b>+</b><span>TF-IDF similarity</span><b>+</b><span>Health / goal nutrition fit</span><b>→</b><strong>Final Match</strong></div>
+</div>
+
+<div class="result-tabs" role="tablist">
+<button class="tab active" data-tab="matches">🍽️ Top Matches</button>
+<button class="tab" data-tab="nutrition">📊 Nutrition Map</button>
+<button class="tab" data-tab="ingredients">🥕 Ingredients</button>
+</div>
+
+<section id="matches" class="tab-panel active"><div class="recipe-grid">
+{% for recipe in recipes %}
+<article class="recipe-card">
+  <div class="recipe-top"><span class="match-label">MATCH {{ loop.index }} • {{ recipe.match_score }}%</span><span class="heart">{{ recipe.nutrition_score }}% nutrition fit</span></div>
+  <div class="recipe-art">{{ ['🥗','🍲','🥘','🍛','🥙'][loop.index0 % 5] }}</div>
+  <h2>{{ recipe.name }}</h2>
+  <p class="recipe-caption">{{ recipe.reasons|join(' • ') }}</p>
+  <div class="nutrition-chips"><span>🔥 {{ recipe.calories }} kcal</span><span>💪 {{ recipe.protein }} protein</span><span>🌿 {{ recipe.fiber }} fiber</span></div>
+  <div class="score-bars">
+    <div><label>Ingredient match <b>{{ recipe.ingredient_score }}%</b></label><span><i style="width:{{ recipe.ingredient_score }}%"></i></span></div>
+    <div><label>Nutrition fit <b>{{ recipe.nutrition_score }}%</b></label><span><i style="width:{{ recipe.nutrition_score }}%"></i></span></div>
+  </div>
+  <details><summary>View nutrition mapping</summary><div class="detail-box"><div class="macro-grid"><span>🥑 Fat <b>{{ recipe.fat }}</b></span><span>🍚 Carbs <b>{{ recipe.carbohydrates }}</b></span><span>🌿 Fiber <b>{{ recipe.fiber }}</b></span><span>💪 Protein <b>{{ recipe.protein }}</b></span></div><h4>Why it matched</h4><ul class="reason-list">{% for reason in recipe.reasons %}<li>{{ reason }}</li>{% endfor %}</ul><h4>Ingredients</h4><p>{{ recipe.ingredients|join(', ') }}</p></div></details>
+</article>
+{% endfor %}
+</div></section>
+
+<section id="nutrition" class="tab-panel"><div class="nutrition-board">
+<div class="board-heading"><span class="eyebrow">NUTRITION MAPPING</span><h2>Compare the recipe profiles</h2><p>The recommendation score uses the nutrition fields available in the curated recipe catalogue.</p></div>
+<div class="nutrition-table"><div class="table-row table-head"><span>Recipe</span><span>Match</span><span>Calories</span><span>Protein</span><span>Carbs</span><span>Fiber</span></div>{% for recipe in recipes %}<div class="table-row"><strong>{{ recipe.name }}</strong><span>{{ recipe.match_score }}%</span><span>{{ recipe.calories }}</span><span>{{ recipe.protein }}</span><span>{{ recipe.carbohydrates }}</span><span>{{ recipe.fiber }}</span></div>{% endfor %}</div>
+</div></section>
+
+<section id="ingredients" class="tab-panel"><div class="ingredient-board"><div class="board-heading"><span class="eyebrow">WHAT YOU CAN COOK</span><h2>Ingredient compatibility</h2><p>Only recipes that can be prepared from your available ingredients plus the basic pantry set are considered.</p></div><div class="ingredient-grid">{% for recipe in recipes %}<div class="ingredient-card"><span class="ingredient-number">0{{ loop.index }}</span><h3>{{ recipe.name }}</h3><p>{{ recipe.ingredients|join(', ') }}</p></div>{% endfor %}</div></div></section>
+
+<div class="action-row"><a class="secondary-cta" href="/">← Create another profile</a><a class="primary-link" href="/timetable">View mapped 7-Day Meal Plan →</a></div>
+{% else %}<div class="empty-state"><div>🥣</div><h2>No recipes found</h2><p>{{ message or 'Try adding a few more available ingredients.' }}</p><a class="primary-link" href="/">Update ingredients →</a></div>{% endif %}
+<footer>NutriMap AI <span>•</span> Health → Nutrition → Recipe mapping</footer>
+</div>
+<script>
+document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(x=>x.classList.remove('active'));btn.classList.add('active');document.getElementById(btn.dataset.tab).classList.add('active');}));
+</script>
+</body></html>
